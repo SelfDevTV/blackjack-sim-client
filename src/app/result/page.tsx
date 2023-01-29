@@ -1,14 +1,20 @@
 import Link from "next/link";
 
-const fetchSimulation = async (simAmount: string, playerAmount: string) => {
+const fetchSimulation = async (
+  link: string | undefined,
+  simAmount: string,
+  playerAmount: string
+) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BLACK_JACK_API}?roundsToSimulate=${simAmount}&numOfPlayers=${playerAmount}`
+    `${link}?roundsToSimulate=${simAmount}&numOfPlayers=${playerAmount}`,
+    { cache: "no-store" }
   );
   return res.json();
 };
 
 export default async function Result({ searchParams }: any) {
   const data = await fetchSimulation(
+    process.env.BLACK_JACK_API,
     searchParams.roundsToSimulate,
     searchParams.numOfPlayers
   );
