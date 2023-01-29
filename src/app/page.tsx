@@ -1,91 +1,73 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+"use client";
 
-const inter = Inter({ subsets: ['latin'] })
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const [simAmount, setSimAmount] = useState("0");
+  const [playerAmount, setPlayerAmount] = useState("0");
+
+  const router = useRouter();
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="w-10/12 m-auto py-12 flex-1">
+      <div className="w-full flex flex-col items-center justify-center">
+        <div className="flex gap-2 flex-col text-center">
+          <h1 className="text-blue-700 text-3xl">Blackjack Simulator</h1>
+          <h2 className="text-gray-600 text-sm">
+            Simulate 1000s of Blackjacke Games -{" "}
+            <span className="opacity-70 text-blue-700">
+              Final Project for Harvard CS50
+            </span>
+          </h2>
+        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            if (Number(simAmount) <= 0 || Number(playerAmount) <= 0) return;
+            router.push(
+              `/result?roundsToSimulate=${simAmount}&numOfPlayers=${playerAmount}`
+            );
+          }}
+          className="mt-8 flex flex-col justify-center w-3/12 bg-orange-50 items-center p-4 rounded-xl gap-2"
+        >
+          <label
+            className="font-bold text-gray-600 text-lg"
+            htmlFor="simAmount"
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
-        </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+            How many games to simulate:
+          </label>
+          <input
+            className="bg-blue-100 text-gray-600 text-center inline-block px-2 py-1 rounded-lg placeholder:text-center"
+            type="number"
+            placeholder="Sim Amount.."
+            name="simAmount"
+            value={simAmount}
+            onChange={(e) => setSimAmount(e.target.value)}
+          />
+          <label
+            className="font-bold text-gray-600 text-lg mt-4"
+            htmlFor="playerAmount"
+          >
+            How many players on table:
+          </label>
+          <input
+            className="bg-blue-100 text-gray-600 text-center inline-block px-2 py-1 rounded-lg placeholder:text-center"
+            type="number"
+            placeholder="Player Amount.."
+            name="playerAmount"
+            value={playerAmount}
+            onChange={(e) => setPlayerAmount(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="bg-blue-700 text-white font-bold px-4 py-2 rounded-lg mt-6"
+          >
+            Run Simulation
+          </button>
+        </form>
       </div>
     </main>
-  )
+  );
 }
