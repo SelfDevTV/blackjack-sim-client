@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+// TODO: Reorder Col Name, trancate percent, remove id
+
 const fetchSimulation = async (
   link: string | undefined,
   simAmount: string,
@@ -13,11 +15,37 @@ const fetchSimulation = async (
 };
 
 export default async function Result({ searchParams }: any) {
-  const data = await fetchSimulation(
+  const unsortedData = await fetchSimulation(
     process.env.BLACK_JACK_API,
     searchParams.roundsToSimulate,
     searchParams.numOfPlayers
   );
+
+  let data: any = Object.keys(unsortedData)
+    .sort()
+    .reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: unsortedData[key],
+      }),
+      {}
+    );
+
+  data = {
+    ...data,
+    players: data.players.map((player: any) => {
+      return {
+        ...player,
+        looseRateInPct: player.looseRateInPct.toFixed(2),
+        tieRateInPct: player.tieRateInPct.toFixed(2),
+        winRateInPct: player.winRateInPct.toFixed(2),
+      };
+    }),
+  };
+
+  data.players.forEach((player: any) => {
+    delete player.id;
+  });
 
   console.log("data is: ", data);
 
@@ -77,7 +105,7 @@ export default async function Result({ searchParams }: any) {
         </table>
         <div className="mt-4">
           <h2 className="text-2xl text-gray-700 opacity-70">Dealer Stats:</h2>
-          <ul>
+          <ul className="gap-1 flex flex-col mt-2">
             <li>Blackjack Count: {data.dealerStats[0].blackjack}</li>
             <li>Lost Count: {data.dealerStats[0].looses}</li>
             <li>Tie Count: {data.dealerStats[0].ties}</li>
@@ -85,10 +113,10 @@ export default async function Result({ searchParams }: any) {
           </ul>
         </div>
         <div>
-          <h2 className="text-2xl text-gray-700 opacity-70">
+          <h2 className="text-2xl text-gray-700 opacity-70 mt-4">
             More Statistics:
           </h2>
-          <ul>
+          <ul className="gap-1 flex flex-col mt-2">
             <li>Player Count: {data.playerCount}</li>
             <li>
               Rounds Simulated Per Player: {data.roundsSimulatedPerPlayer}

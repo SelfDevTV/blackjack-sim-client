@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
   const [simAmount, setSimAmount] = useState("0");
@@ -60,12 +61,13 @@ export default function Home() {
             value={playerAmount}
             onChange={(e) => setPlayerAmount(e.target.value)}
           />
-          <button
+          <Link
             type="submit"
+            href={`/result?roundsToSimulate=${simAmount}&numOfPlayers=${playerAmount}`}
             className="bg-blue-700 text-white font-bold px-4 py-2 rounded-lg mt-6"
           >
             Run Simulation
-          </button>
+          </Link>
         </form>
       </div>
     </main>
